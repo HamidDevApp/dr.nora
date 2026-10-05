@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens (Tailwind v4) : chaque variable --color-* devient une
+ * classe utilitaire (bg-ivory, text-ink, text-sage-600, ring-champagne...).
+ */
+@theme {
+  --color-ivory: #faf8f5;
+  --color-sand: #f3eee7;
+  --color-line: #e7e0d6;
+  --color-ink: #1f2a2e;
+  --color-stone: #6b6b66;
+  --color-sage-100: #e6edeb;
+  --color-sage-600: #4a6762;
+  --color-champagne: #b89b72;
+  --color-champagne-700: #7d6141;
+
+  /* Alimentées par next/font dans app/layout.tsx */
+  --font-serif: var(--font-cormorant), "Times New Roman", serif;
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* la barre fixe ne masque pas les titres */
+}
+
+body {
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-sage-100);
+}
+
+/*
+ * Accueil cinématique : révélation du titre et zoom du fond en CSS pur,
+ * pour qu'ils démarrent avant l'hydratation (aucun impact sur le LCP ni le CLS).
+ */
+.reveal-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.reveal-word > span {
+  display: inline-block;
+  transform: translateY(110%);
+  animation: reveal-up 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes reveal-up {
+  to { transform: translateY(0); }
+}
+
+.hero-zoom {
+  animation: hero-zoom 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes hero-zoom {
+  from { transform: scale(1.12); }
+  to { transform: scale(1); }
+}
+
+.fade-in-late {
+  opacity: 0;
+  animation: fade-in 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-word > span,
+  .hero-zoom,
+  .fade-in-late,
+  .marquee-track {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+}
